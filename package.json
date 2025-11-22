@@ -1,7 +1,7 @@
 {
   "name": "workspace",
   "version": "1.0.0",
-  "description": "",
+  "description": "Express.js form submission to Google Sheets API",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
