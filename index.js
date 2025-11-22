@@ -1,5 +1,6 @@
 const express = require("express");
 const { google } = require("googleapis");
+const PORT = process.env.PORT || 1337;
 
 const app = express();
 app.set("view engine", "ejs");
@@ -12,10 +13,14 @@ app.get("/", (req, res) => {
 app.post("/", async (req, res) => {
   const { firstName, lastName, email, phone } = req.body;
 
-  const auth = new google.auth.GoogleAuth({
-    keyFile: "credentials.json",
-    scopes: "https://www.googleapis.com/auth/spreadsheets",
-  });
+ // NEW: Reads from environment variables
+const auth = new google.auth.GoogleAuth({
+  credentials: {
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // CRITICAL: Handle newline characters
+  },
+  scopes: "https://www.googleapis.com/auth/spreadsheets",
+});
 
   // Create client instance for auth
   const client = await auth.getClient();
@@ -52,4 +57,5 @@ app.post("/", async (req, res) => {
   res.send("Successfully submitted! Thank you!");
 });
 
-app.listen(1337, (req, res) => console.log("running on 1337"));
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
